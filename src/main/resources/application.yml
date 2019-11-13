@@ -1,0 +1,28 @@
+app:
+  jwt:
+    secret: JWTSecretKey
+    expiration: 600000
+
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2/
+
+  jpa:
+    show-sql: false
+
+  mail:
+    protocol: smtp
+    host: localhost
+    port: 1025
+    username:
+    password:
+    smtp:
+      auth: false
+
+  jackson:
+    time-zone: UTC
+
+server:
+  port: 8000
