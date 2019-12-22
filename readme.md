@@ -11,7 +11,7 @@ These instructions will get you up and running with project in no time.
 
 ### Installing
 
-After cloning the repo run `docker-compose up` in order to start docker container for mailhog. Mailhog is used as fake SMTP server for registration mails. After the container is up, you can access it on `http://localhost:8025/`.
+After cloning the repo run `docker-compose up` in order to start mailhog and activemq. Mailhog is used as fake SMTP server for registration mails. After the container is up, you can access it on `http://localhost:8025/`. ActiveMQ is used as message broker to separate user and email service. Currently both services reside in the same app. You can access the ActiveMQ client on `http://localhost:8161/`.
 
 To start the application run:
 
@@ -56,6 +56,7 @@ could be used.
 
 * [Spring Framework](https://spring.io/)
 * [Maven](https://maven.apache.org/)
+* [ActiveMQ](https://activemq.apache.org/)
 * [Docker Compose](https://docs.docker.com/compose/)
 
 ## License
