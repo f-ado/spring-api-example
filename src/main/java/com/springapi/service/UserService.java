@@ -6,6 +6,8 @@ import com.springapi.domain.RoleName;
 import com.springapi.domain.User;
 import com.springapi.filters.specifications.user.UserSpecification;
 import com.springapi.filters.user.UserFilter;
+import com.springapi.jms.messages.UserRegisteredMessage;
+import com.springapi.jms.producers.UserRegisteredProducer;
 import com.springapi.repository.RoleRepository;
 import com.springapi.repository.UserRepository;
 import com.springapi.service.dto.CurrentUserDto;
@@ -19,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserRegisteredProducer userRegisteredProducer;
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -138,29 +142,13 @@ public class UserService {
                 request.getLocalPort()
         );
 
-        String emailTextMessage = String.format(
-            "Dear %s %s, welcome! To confirm your account, please click the link below:\n" +
-            "%s/confirm?token=%s",
-            user.getFirstName(),
-            user.getLastName(),
-            appUrl,
-            user.getConfirmationToken()
-        );
-
-        SimpleMailMessage registrationEmail = new SimpleMailMessage();
-        registrationEmail.setTo(user.getEmail());
-        registrationEmail.setSubject("Registration Confirmation");
-        registrationEmail.setText(emailTextMessage);
-        registrationEmail.setFrom("noreply@test.com");
-        registrationEmail.setReplyTo("noreply@test.com");
-
-        emailService.sendEmail(registrationEmail);
-        LOGGER.debug("Mail sent to user={}", user.getId());
+        final UserRegisteredMessage message = new UserRegisteredMessage(UUID.randomUUID(), appUrl, user);
+        userRegisteredProducer.sendMessage(message);
 
         return user;
     }
 
-    public void saveUser(final User user) {
+    private void saveUser(final User user) {
         userRepository.save(user);
     }
 

@@ -24,5 +24,14 @@ spring:
   jackson:
     time-zone: UTC
 
+activemq:
+  broker-url: tcp://localhost:61616
+  user: admin
+  password: admin
+
+destination:
+  user:
+    registration: user.created.email
+
 server:
   port: 8000

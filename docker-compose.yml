@@ -11,3 +11,9 @@ services:
       ports:
         - "1025:1025"
         - "8025:8025"
+
+  activemq:
+      image: rmohr/activemq
+      ports:
+        - "8161:8161"
+        - "61616:61616"
