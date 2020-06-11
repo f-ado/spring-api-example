@@ -1,3 +1,5 @@
+![AdoFelic](https://circleci.com/gh/AdoFelic/spring-api-example.svg?style=svg)
+
 # Spring Framework demonstration
 
 A simple API that demostrates various usages of spring framework. It exposes API for registering/signin users,
