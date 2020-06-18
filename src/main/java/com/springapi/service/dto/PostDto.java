@@ -7,14 +7,12 @@ import com.springapi.domain.Tag;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.hateoas.core.Relation;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @Setter
-@Relation(collectionRelation = "posts")
 public class PostDto {
     private Long id;
     private String title;

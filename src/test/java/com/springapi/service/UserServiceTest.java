@@ -1,4 +1,4 @@
-package com.springapi;
+package com.springapi.service;
 
 import com.springapi.domain.Gender;
 import com.springapi.domain.User;
@@ -43,13 +43,10 @@ public class UserServiceTest extends EasyMockSupport {
 
     private Pageable nonSortablePageRequest;
 
-    private final int PAGE_NUMBER = 1;
-    private final int PAGE_SIZE = 20;
-
     @Before
     public void setUp() throws Exception {
         this.userService = new UserService(userRepository);
-        nonSortablePageRequest = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
+        nonSortablePageRequest = PageRequest.of(1, 20);
     }
 
     @Test
@@ -113,7 +110,7 @@ public class UserServiceTest extends EasyMockSupport {
 
         replayAll();
 
-        Page<UserDto> result = userService.getFilteredUsers(filter, new PageRequest(1, 20));
+        Page<UserDto> result = userService.getFilteredUsers(filter, PageRequest.of(1, 20));
 
         assertNotNull(result.getContent());
         assertEquals(result.getContent().size(), filteredUsers.size());

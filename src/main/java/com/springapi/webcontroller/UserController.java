@@ -10,8 +10,8 @@ import com.springapi.service.response.UsernameEmailAvailability;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ public class UserController extends BaseWebController {
     private UserService userService;
 
     @GetMapping("/filter")
-    public Resources<UserDto> filterUsers(
+    public CollectionModel<UserDto> filterUsers(
             @RequestParam(value = "search", required = false) final String search,
             @RequestParam(value = "active", required = false) final Boolean active,
             @RequestParam(value = "gender", required = false) final String gender,
@@ -41,13 +41,13 @@ public class UserController extends BaseWebController {
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @ResponseBody
     @GetMapping
-    public Resources<UserDto> getAllUsers(@CurrentUser final UserPrincipal currentUser, final Pageable page) {
+    public CollectionModel<UserDto> getAllUsers(@CurrentUser final UserPrincipal currentUser, final Pageable page) {
 
         return okPagedResponse(userService.getAllUsers(page));
     }
 
     @GetMapping("/{id}")
-    public Resource<UserDto> getById(@PathVariable("id") final UUID id) {
+    public EntityModel<UserDto> getById(@PathVariable("id") final UUID id) {
         return okResponse(userService.getUser(id));
     }
 
@@ -66,7 +66,7 @@ public class UserController extends BaseWebController {
     }
 
     @GetMapping("/me")
-    public Resource<CurrentUserDto> getCurrentUser(@CurrentUser final UserPrincipal userPrincipal) {
+    public EntityModel<CurrentUserDto> getCurrentUser(@CurrentUser final UserPrincipal userPrincipal) {
         return okResponse(userService.getCurrentUser(userPrincipal));
     }
 

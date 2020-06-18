@@ -23,7 +23,7 @@ public class CategoryService {
     }
 
     public Page<Category> getAll(final Pageable page) {
-        PageRequest nonSortablePageRequest = new PageRequest(page.getPageNumber(), page.getPageSize());
+        PageRequest nonSortablePageRequest = PageRequest.of(page.getPageNumber(), page.getPageSize());
 
         Page postsPage = repository.findAll(nonSortablePageRequest);
         List<Post> posts = postsPage.getContent();

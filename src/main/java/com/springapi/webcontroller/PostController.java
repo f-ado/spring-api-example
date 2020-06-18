@@ -9,8 +9,8 @@ import com.springapi.service.request.PostRequest;
 import com.springapi.service.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,21 +40,21 @@ public class PostController extends BaseWebController {
     }
 
     @PutMapping("{id}/edit")
-    public Resource<ResponseEntity<PostDto>> updatePost(@PathVariable("id") final Long id,
+    public EntityModel<ResponseEntity<PostDto>> updatePost(@PathVariable("id") final Long id,
                                                         @RequestBody final PostRequest postRequest,
                                                         @CurrentUser final UserPrincipal userPrincipal) {
         return okResponse(postService.updatePost(id, postRequest));
     }
 
     @GetMapping("/all")
-    public Resources<PostDto> getAllPosts(@RequestParam(value = "search", required = false) final String search,
-                                          @RequestParam(value = "owner_id", required = false) final UUID ownerId,
-                                          Pageable page) {
+    public CollectionModel<PostDto> getAllPosts(@RequestParam(value = "search", required = false) final String search,
+                                                @RequestParam(value = "owner_id", required = false) final UUID ownerId,
+                                                Pageable page) {
         return okPagedResponse(postService.findAll(search, ownerId, page));
     }
 
     @GetMapping("/{id}")
-    public Resource<ResponseEntity<PostDto>> getSinglePost(@PathVariable("id") final Long id)
+    public EntityModel<ResponseEntity<PostDto>> getSinglePost(@PathVariable("id") final Long id)
             throws EntityNotFoundException {
         return okResponse(postService.getById(id));
     }

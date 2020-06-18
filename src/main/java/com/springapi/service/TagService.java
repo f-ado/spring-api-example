@@ -24,7 +24,7 @@ public class TagService {
     }
 
     public Page<Tag> getAll(final Pageable page) {
-        PageRequest nonSortablePageRequest = new PageRequest(page.getPageNumber(), page.getPageSize());
+        PageRequest nonSortablePageRequest = PageRequest.of(page.getPageNumber(), page.getPageSize());
 
         Page postsPage = repository.findAll(nonSortablePageRequest);
         List<Post> posts = postsPage.getContent();
