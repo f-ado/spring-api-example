@@ -1,13 +1,12 @@
 package com.springapi.service;
 
-import com.springapi.EasyMockExtension;
 import com.springapi.domain.Category;
 import com.springapi.repository.CategoryRepository;
-import org.easymock.EasyMock;
-import org.easymock.Mock;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -16,42 +15,34 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(EasyMockExtension.class)
+@ExtendWith(MockitoExtension.class)
 class CategoryServiceTest {
+    @InjectMocks
     private CategoryService service;
 
     @Mock
     private CategoryRepository repository;
 
-    @BeforeEach
-    void setUp() {
-        service = new CategoryService(repository);
-    }
+    private PageRequest nonSortablePageRequest = PageRequest.of(1, 20);
 
     @Test
     void getAll() {
-        List<Category> categoryList = Arrays.asList(
-                createCategory(1L, "c1"), createCategory(2L, "c2")
-        );
-
+        List<Category> categoryList = Arrays.asList(createCategory(1L, "c1"), createCategory(2L, "c2"));
         Page<Category> categoryPage = new PageImpl(categoryList);
 
-        expect(repository.findAll(PageRequest.of(1, 20)))
-                .andReturn(categoryPage);
+        when(repository.findAll(nonSortablePageRequest)).thenReturn(categoryPage);
 
-        EasyMock.replay(repository);
-
-        Page<Category> result = repository.findAll(PageRequest.of(1, 20));
+        Page<Category> result = service.getAll(PageRequest.of(1, 20));
+        verify(repository).findAll(nonSortablePageRequest);
 
         assertNotNull(result.getContent());
         assertEquals(result.getContent().size(), 2);
         assertEquals(result.getContent().get(0).getName(), "c1");
-
-        EasyMock.verify(repository);
     }
 
     private Category createCategory(Long id, String name) {

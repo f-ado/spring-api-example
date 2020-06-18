@@ -26,6 +26,7 @@
 		<jacoco.percentage.line>0.0</jacoco.percentage.line>
 		<jacoco.percentage.branch>0.0</jacoco.percentage.branch>
 		<junit-platform.version>5.3.1</junit-platform.version>
+		<mockito.version>2.23.0</mockito.version>
 	</properties>
 
 	<dependencies>
@@ -132,6 +133,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+			<version>${mockito.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<scope>test</scope>
+			<version>${mockito.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

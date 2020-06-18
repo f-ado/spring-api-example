@@ -25,9 +25,9 @@ public class CategoryService {
     public Page<Category> getAll(final Pageable page) {
         PageRequest nonSortablePageRequest = PageRequest.of(page.getPageNumber(), page.getPageSize());
 
-        Page postsPage = repository.findAll(nonSortablePageRequest);
-        List<Post> posts = postsPage.getContent();
+        Page categoryPage = repository.findAll(nonSortablePageRequest);
+        List<Category> categories = categoryPage.getContent();
 
-        return new PageImpl(posts, page, postsPage.getTotalElements());
+        return new PageImpl(categories, page, categoryPage.getTotalElements());
     }
 }
