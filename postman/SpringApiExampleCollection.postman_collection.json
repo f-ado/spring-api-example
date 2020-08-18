@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d7b5756c-c53e-4ac8-975c-a660a13d593d",
+		"_postman_id": "c26a9369-649b-4f76-b6e1-a98d53501e49",
 		"name": "SpringApiExampleCollection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,7 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "854867aa-e70c-4d51-8ebc-0c2c02d2e061",
+								"id": "1ca7be4a-b475-47fc-8a3c-1aaa648bce86",
 								"exec": [
 									"var data = JSON.parse(responseBody);",
 									"postman.setEnvironmentVariable(\"bearer_token\", data.access_token);",
@@ -60,10 +60,10 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "75866539-eb51-49d3-bcb0-0aa6a2db4da7",
+								"id": "f75f7e5c-6c53-44a9-8ba5-1fbc35ae5241",
 								"exec": [
 									"var data = JSON.parse(responseBody);",
-									"postman.setEnvironmentVariable(\"user_id\", data.content[0].id);",
+									"postman.setEnvironmentVariable(\"user_id\", data._embedded.userDtoList[0].id);",
 									""
 								],
 								"type": "text/javascript"
@@ -268,7 +268,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "75866539-eb51-49d3-bcb0-0aa6a2db4da7",
+								"id": "f8183166-ee4e-4131-9532-29e6012f1122",
 								"exec": [
 									""
 								],
@@ -318,7 +318,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9c9a52bc-129d-407d-9758-a8800e31ae85",
+								"id": "93a3cdbc-0605-4fda-8073-8d143dee036b",
 								"exec": [
 									"var data = JSON.parse(responseBody);",
 									"postman.setEnvironmentVariable(\"user_id\", data.id);",
