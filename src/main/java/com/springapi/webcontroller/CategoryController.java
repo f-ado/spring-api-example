@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/categories")
 public class CategoryController extends BaseWebController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/all")
     public CollectionModel<Category> getAllTags(final Pageable page) {

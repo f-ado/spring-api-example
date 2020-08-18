@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/tags")
 public class TagController extends BaseWebController {
 
-    @Autowired
-    private TagService tagService;
+    private final TagService tagService;
+
+    public TagController(TagService tagService) {
+        this.tagService = tagService;
+    }
 
     @GetMapping("/all")
     public CollectionModel<Tag> getAllTags(final Pageable page) {

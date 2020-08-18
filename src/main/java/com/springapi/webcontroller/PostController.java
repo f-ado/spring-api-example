@@ -21,11 +21,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/posts")
 public class PostController extends BaseWebController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
+
+    public PostController(UserService userService, PostService postService) {
+        this.userService = userService;
+        this.postService = postService;
+    }
 
     @PostMapping("/store")
     public ResponseEntity<ApiResponse> processRegistrationForm(@RequestBody final PostRequest postRequest,

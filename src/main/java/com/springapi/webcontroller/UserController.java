@@ -20,8 +20,11 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/users")
 public class UserController extends BaseWebController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/filter")
     public CollectionModel<UserDto> filterUsers(

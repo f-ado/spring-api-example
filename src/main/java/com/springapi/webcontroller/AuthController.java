@@ -36,7 +36,6 @@ public class AuthController {
     private JwtTokenHandler tokenProvider;
     private UserService userService;
 
-    @Autowired
     public AuthController(
             final AuthenticationManager authenticationManager,
             final UserRepository userRepository,
