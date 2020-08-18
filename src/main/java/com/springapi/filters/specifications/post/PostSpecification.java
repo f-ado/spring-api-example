@@ -23,29 +23,18 @@ public class PostSpecification extends BaseFilterSpecification<PostFilter, Post>
     }
 
     private Predicate defineFilter(Root<Post> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-        Predicate result = null;
-
-        result = and(criteriaBuilder, result, addPostFilter(root, criteriaQuery, criteriaBuilder));
-
-        return result;
+        return and(criteriaBuilder, addPostFilter(root, criteriaQuery, criteriaBuilder));
     }
 
     public Predicate addPostFilter(From<?, ?> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
         Predicate result = null;
-
         if (StringUtils.isNotBlank(filter.getSearch())) {
-            result = and(criteriaBuilder, result, addSearch(root, criteriaBuilder));
+            result = and(criteriaBuilder, addSearch(root, criteriaBuilder));
         }
-
         if (filter.getOwnerId() != null) {
             result = and(criteriaBuilder, result, criteriaBuilder.equal(root.get(OWNER).get(ID), filter.getOwnerId()));
         }
-
-
-        criteriaQuery.orderBy(
-                criteriaBuilder.desc(root.get("createdAt"))
-        );
-
+        criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdAt")));
         return result;
     }
 
