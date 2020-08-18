@@ -4,6 +4,8 @@ import com.springapi.domain.Gender;
 import com.springapi.domain.User;
 import com.springapi.filters.specifications.user.UserSpecification;
 import com.springapi.filters.user.UserFilter;
+import com.springapi.jms.producers.UserRegisteredProducer;
+import com.springapi.repository.RoleRepository;
 import com.springapi.repository.UserRepository;
 import com.springapi.service.EmailService;
 import com.springapi.service.UserService;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,13 +42,22 @@ public class UserServiceTest extends EasyMockSupport {
     private UserRepository userRepository;
 
     @Mock
+    private RoleRepository roleRepository;
+
+    @Mock
     private EmailService emailService;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private UserRegisteredProducer userRegisteredProducer;
 
     private Pageable nonSortablePageRequest;
 
     @Before
     public void setUp() throws Exception {
-        this.userService = new UserService(userRepository);
+        this.userService = new UserService(userRepository, roleRepository, emailService, passwordEncoder, userRegisteredProducer);
         nonSortablePageRequest = PageRequest.of(1, 20);
     }
 

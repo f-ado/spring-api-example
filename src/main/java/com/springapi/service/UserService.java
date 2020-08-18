@@ -38,21 +38,21 @@ public class UserService {
 
     private UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
+
+    private final EmailService emailService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final UserRegisteredProducer userRegisteredProducer;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserRegisteredProducer userRegisteredProducer;
-
-    @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, EmailService emailService, PasswordEncoder passwordEncoder, UserRegisteredProducer userRegisteredProducer) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
+        this.userRegisteredProducer = userRegisteredProducer;
     }
 
     public UserDto getUser(final UUID id) {
