@@ -26,22 +26,18 @@ public class UserSpecification extends BaseFilterSpecification<UserFilter, User>
 
     @Override
     public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-        return defineFilter(root, criteriaQuery, criteriaBuilder);
+        return defineFilter(root, criteriaBuilder);
     }
 
-    private Predicate defineFilter(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-        Predicate result = null;
-
-        result = and(criteriaBuilder, result, addUserFilter(root, criteriaQuery, criteriaBuilder));
-
-        return result;
+    private Predicate defineFilter(Root<User> root, CriteriaBuilder criteriaBuilder) {
+        return and(criteriaBuilder, addUserFilter(root, criteriaBuilder));
     }
 
-    public Predicate addUserFilter(From<?, ?> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+    public Predicate addUserFilter(From<?, ?> root, CriteriaBuilder criteriaBuilder) {
         Predicate result = null;
 
         if (filter.getActive() != null) {
-            result = and(criteriaBuilder, result, root.get(ACTIVE).in(filter.getActive()));
+            result = and(criteriaBuilder, root.get(ACTIVE).in(filter.getActive()));
         }
 
         if (filter.getGender() != null) {
