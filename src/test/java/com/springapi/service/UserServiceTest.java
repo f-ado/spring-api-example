@@ -1,9 +1,11 @@
-package com.springapi;
+package com.springapi.service;
 
 import com.springapi.domain.Gender;
 import com.springapi.domain.User;
 import com.springapi.filters.specifications.user.UserSpecification;
 import com.springapi.filters.user.UserFilter;
+import com.springapi.jms.producers.UserRegisteredProducer;
+import com.springapi.repository.RoleRepository;
 import com.springapi.repository.UserRepository;
 import com.springapi.service.EmailService;
 import com.springapi.service.UserService;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,17 +42,23 @@ public class UserServiceTest extends EasyMockSupport {
     private UserRepository userRepository;
 
     @Mock
+    private RoleRepository roleRepository;
+
+    @Mock
     private EmailService emailService;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private UserRegisteredProducer userRegisteredProducer;
 
     private Pageable nonSortablePageRequest;
 
-    private final int PAGE_NUMBER = 1;
-    private final int PAGE_SIZE = 20;
-
     @Before
     public void setUp() throws Exception {
-        this.userService = new UserService(userRepository);
-        nonSortablePageRequest = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
+        this.userService = new UserService(userRepository, roleRepository, emailService, passwordEncoder, userRegisteredProducer);
+        nonSortablePageRequest = PageRequest.of(1, 20);
     }
 
     @Test
@@ -113,7 +122,7 @@ public class UserServiceTest extends EasyMockSupport {
 
         replayAll();
 
-        Page<UserDto> result = userService.getFilteredUsers(filter, new PageRequest(1, 20));
+        Page<UserDto> result = userService.getFilteredUsers(filter, PageRequest.of(1, 20));
 
         assertNotNull(result.getContent());
         assertEquals(result.getContent().size(), filteredUsers.size());

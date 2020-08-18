@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -36,7 +37,6 @@ public class AuthController {
     private JwtTokenHandler tokenProvider;
     private UserService userService;
 
-    @Autowired
     public AuthController(
             final AuthenticationManager authenticationManager,
             final UserRepository userRepository,
@@ -71,14 +71,13 @@ public class AuthController {
     public ResponseEntity<ApiResponse> processRegistrationForm(@RequestBody final SignupRequest signupRequest,
                                                                final HttpServletRequest request) throws Exception {
 
-        if (userService.existsByEmail(signupRequest.getEmail())) {
-            return new ResponseEntity<>(new ApiResponse(false, "Email is already taken!"),
-                    HttpStatus.OK);
-        }
+        String userCheckResult = userService.checkIfUserRegistered(
+                signupRequest.getEmail(),
+                signupRequest.getUsername()
+        );
 
-        if(userService.existsByUsername(signupRequest.getUsername())){
-            return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.OK);
+        if (userCheckResult != null) {
+            return new ResponseEntity<>(new ApiResponse(false, userCheckResult), HttpStatus.OK);
         }
 
         User user = userService.registerAndSendEmail(signupRequest, request);

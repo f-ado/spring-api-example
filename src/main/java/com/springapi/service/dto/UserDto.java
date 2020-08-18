@@ -4,13 +4,11 @@ import com.springapi.domain.Gender;
 import com.springapi.domain.User;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.hateoas.core.Relation;
 
 import java.util.UUID;
 
 @Getter
 @Setter
-@Relation(collectionRelation = "users")
 public class UserDto {
     private UUID id;
     private String firstName;

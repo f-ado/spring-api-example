@@ -24,11 +24,11 @@ public class TagService {
     }
 
     public Page<Tag> getAll(final Pageable page) {
-        PageRequest nonSortablePageRequest = new PageRequest(page.getPageNumber(), page.getPageSize());
+        PageRequest nonSortablePageRequest = PageRequest.of(page.getPageNumber(), page.getPageSize());
 
-        Page postsPage = repository.findAll(nonSortablePageRequest);
-        List<Post> posts = postsPage.getContent();
+        Page tagsPage = repository.findAll(nonSortablePageRequest);
+        List<Tag> posts = tagsPage.getContent();
 
-        return new PageImpl(posts, page, postsPage.getTotalElements());
+        return new PageImpl(posts, page, tagsPage.getTotalElements());
     }
 }

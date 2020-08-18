@@ -80,7 +80,7 @@ public class PostService {
                 .ownerId(ownerId)
                 .build();
 
-        PageRequest nonSortablePageRequest = new PageRequest(page.getPageNumber(), page.getPageSize());
+        PageRequest nonSortablePageRequest = PageRequest.of(page.getPageNumber(), page.getPageSize());
 
         Page<Post> postsPage = repository.findAll(new PostSpecification(filter), nonSortablePageRequest);
         List<Post> posts = postsPage.getContent();

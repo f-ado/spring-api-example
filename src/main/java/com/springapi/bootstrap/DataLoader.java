@@ -6,6 +6,7 @@ import com.springapi.repository.PostRepository;
 import com.springapi.repository.TagRepository;
 import com.springapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +17,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Component
-public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
+public class DataLoader implements CommandLineRunner {
     private UserRepository userRepository;
 
     private PostRepository postRepository;
@@ -39,9 +40,8 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         this.categoryRepository = categoryRepository;
     }
 
-
     @Override
-    public void onApplicationEvent(final ContextRefreshedEvent contextRefreshedEvent) {
+    public void run(String... args) throws Exception {
         initData();
     }
 
