@@ -60,18 +60,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		http
-				.cors()
-				.and()
-				.csrf()
-				.disable()
-				.exceptionHandling()
-				.authenticationEntryPoint(authEntryPoint)
-				.and()
-				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
-				.authorizeRequests()
-				.antMatchers("/",
+			.cors()
+			.and()
+			.csrf()
+			.disable()
+			.exceptionHandling()
+			.authenticationEntryPoint(authEntryPoint)
+			.and()
+			.sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+			.authorizeRequests(authorize -> {
+				authorize
+					.antMatchers(
+						"/",
 						"/favicon.ico",
 						"/**/*.png",
 						"/**/*.gif",
@@ -79,32 +81,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						"/**/*.jpg",
 						"/**/*.html",
 						"/**/*.css",
-						"/**/*.js")
-				.permitAll()
-				.and()
-				.authorizeRequests()
-				.antMatchers("/h2/**")
-				.permitAll()
-				.antMatchers("/api/auth/**")
-				.permitAll()
-				.antMatchers("/api/users/checkUsernameAvailability", "/api/users/checkEmailAvailability")
-				.permitAll()
-				.antMatchers(
+						"/**/*.js"
+					).permitAll()
+					.antMatchers("/h2/**").permitAll()
+					.antMatchers("/api/auth/**").permitAll()
+					.antMatchers(
+						"/api/users/checkUsernameAvailability",
+						"/api/users/checkEmailAvailability"
+					).permitAll()
+					.antMatchers(
 						HttpMethod.GET,
 						"/api/posts/**",
 						"/api/categories/all",
-                        "/api/tags/all"
-				)
-				.permitAll()
-				.anyRequest()
-				.authenticated();
+						"/api/tags/all"
+					)
+					.permitAll();
+			})
+			.authorizeRequests()
+			.anyRequest()
+			.authenticated();
 
 		// Custom JWT security filter
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
 		// For h2-console
 		http.headers().frameOptions().sameOrigin();
-
 	}
 
 }
