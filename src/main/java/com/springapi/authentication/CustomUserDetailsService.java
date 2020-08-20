@@ -2,7 +2,7 @@ package com.springapi.authentication;
 
 import com.springapi.domain.User;
 import com.springapi.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.springapi.service.exception.ResourceNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,16 +13,22 @@ import java.util.UUID;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(final String usernameOrEmail) throws UsernameNotFoundException {
         User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail)
+                    () -> new ResourceNotFoundException(
+                        User.class.getCanonicalName(),
+                        "Username or Email",
+                        usernameOrEmail
+                    )
                 );
 
         return UserPrincipal.create(user);
@@ -30,10 +36,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Transactional
     public UserDetails loadUserById(final UUID id) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new UsernameNotFoundException("User not found with id : " + id)
-        );
-
+        User user = userRepository
+                .findById(id)
+                .orElseThrow(
+                    () -> new ResourceNotFoundException(User.class.getCanonicalName(), "UUID", id)
+                );
         return UserPrincipal.create(user);
     }
 }
