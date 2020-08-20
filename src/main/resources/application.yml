@@ -9,6 +9,9 @@ spring:
       enabled: true
       path: /h2/
 
+  datasource:
+    generate-unique-name: false
+
   jpa:
     show-sql: false
 
