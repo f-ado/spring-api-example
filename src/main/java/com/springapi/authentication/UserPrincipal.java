@@ -1,15 +1,14 @@
 package com.springapi.authentication;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.springapi.domain.Role;
+import com.springapi.domain.RoleName;
 import com.springapi.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserPrincipal implements UserDetails {
@@ -41,9 +40,11 @@ public class UserPrincipal implements UserDetails {
     }
 
     public static UserPrincipal create(final User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
-                new SimpleGrantedAuthority(role.getName().name())
-        ).collect(Collectors.toList());
+        Set<GrantedAuthority> authorities = user.getRoles().stream()
+                .map(Role::getName)
+                .map(RoleName::name)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
 
         return new UserPrincipal(
                 user.getId(),
