@@ -15,11 +15,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Component
-public class JwtTokenHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenHandler.class);
+public class JwtHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtHandler.class);
 
     @Value("${app.jwt.secret}")
     private String secret;
@@ -27,28 +30,42 @@ public class JwtTokenHandler {
     @Value("${app.jwt.expiration}")
     private int expiration;
 
-    public String generateToken(final Authentication authentication) {
-
+    public String generateJWT(final Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        return createJWT(createClaims(userPrincipal), userPrincipal.getId().toString());
+    }
 
+    private String createJWT(Map<String, Object> claims, String subject) {
         Date now = new Date();
-        Date expDate = new Date(now.getTime() + expiration);
-
         return Jwts.builder()
-                .setSubject(userPrincipal.getId().toString())
                 .setIssuedAt(now)
-                .setExpiration(expDate)
+                .setClaims(claims)
+                .setSubject(subject)
+                .setExpiration(new Date(now.getTime() + expiration))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
+    public Map<String, Object> createClaims(UserPrincipal userPrincipal) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userName", userPrincipal.getUsername());
+        claims.put("email", userPrincipal.getEmail());
+        return claims;
+    }
+
     public UUID getIdFromJWT(final String token) {
-        Claims claims = Jwts.parser()
+        return UUID.fromString(extractClaim(token, Claims::getSubject));
+    }
+
+    public <R> R extractClaim(String token, Function<Claims, R> claimsFn) {
+        final Claims claims = extractClaimsFromToken(token);
+        return claimsFn.apply(claims);
+    }
+    private Claims extractClaimsFromToken(String token) {
+        return Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
-
-        return UUID.fromString(claims.getSubject());
     }
 
     public boolean validateToken(final String authToken) {

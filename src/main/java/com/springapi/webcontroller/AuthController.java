@@ -1,6 +1,6 @@
 package com.springapi.webcontroller;
 
-import com.springapi.authentication.JwtTokenHandler;
+import com.springapi.authentication.JwtHandler;
 import com.springapi.domain.User;
 import com.springapi.repository.RoleRepository;
 import com.springapi.repository.UserRepository;
@@ -9,7 +9,6 @@ import com.springapi.service.request.LoginRequest;
 import com.springapi.service.request.SignupRequest;
 import com.springapi.service.response.ApiResponse;
 import com.springapi.service.response.JwtAuthenticationResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -34,7 +32,7 @@ public class AuthController {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
-    private JwtTokenHandler tokenProvider;
+    private JwtHandler tokenProvider;
     private UserService userService;
 
     public AuthController(
@@ -42,7 +40,7 @@ public class AuthController {
             final UserRepository userRepository,
             final RoleRepository roleRepository,
             final PasswordEncoder passwordEncoder,
-            final JwtTokenHandler tokenProvider,
+            final JwtHandler tokenProvider,
             final UserService userService
     ) {
         this.authenticationManager = authenticationManager;
@@ -63,7 +61,7 @@ public class AuthController {
                 )
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.generateToken(authentication);
+        String jwt = tokenProvider.generateJWT(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
 
