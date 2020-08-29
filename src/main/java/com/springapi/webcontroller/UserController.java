@@ -7,12 +7,10 @@ import com.springapi.service.UserService;
 import com.springapi.service.dto.CurrentUserDto;
 import com.springapi.service.dto.UserDto;
 import com.springapi.service.response.UsernameEmailAvailability;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -41,11 +39,9 @@ public class UserController extends BaseWebController {
         return okPagedResponse(userService.getFilteredUsers(userFilterBuilder.build(), page));
     }
 
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @ResponseBody
     @GetMapping
     public CollectionModel<UserDto> getAllUsers(@CurrentUser final UserPrincipal currentUser, final Pageable page) {
-
         return okPagedResponse(userService.getAllUsers(page));
     }
 

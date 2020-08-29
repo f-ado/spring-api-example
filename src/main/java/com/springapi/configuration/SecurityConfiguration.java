@@ -22,9 +22,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
-		securedEnabled = true,
-		jsr250Enabled = true,
-		prePostEnabled = true
+		securedEnabled = true, // @Secured Annotation
+		jsr250Enabled = true, // @RoleAllowed Annotation
+		prePostEnabled = true // @PreAuthorize and @PostAuthorize Annotations
 )
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 

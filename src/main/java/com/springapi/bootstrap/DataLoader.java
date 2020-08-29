@@ -1,20 +1,30 @@
 package com.springapi.bootstrap;
 
-import com.springapi.domain.*;
+import com.springapi.domain.Authority;
+import com.springapi.domain.Category;
+import com.springapi.domain.Gender;
+import com.springapi.domain.Post;
+import com.springapi.domain.Role;
+import com.springapi.domain.RoleName;
+import com.springapi.domain.Tag;
+import com.springapi.domain.User;
+import com.springapi.repository.AuthorityRepository;
 import com.springapi.repository.CategoryRepository;
 import com.springapi.repository.PostRepository;
+import com.springapi.repository.RoleRepository;
 import com.springapi.repository.TagRepository;
 import com.springapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -26,18 +36,29 @@ public class DataLoader implements CommandLineRunner {
 
     private CategoryRepository categoryRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private RoleRepository roleRepository;
+
+    private AuthorityRepository authorityRepository;
+
+    final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DataLoader(final UserRepository userRepository,
-                      final PostRepository postRepository,
-                      final TagRepository tagRepository,
-                      final CategoryRepository categoryRepository) {
+    public DataLoader(
+        final UserRepository userRepository,
+        final PostRepository postRepository,
+        final TagRepository tagRepository,
+        final CategoryRepository categoryRepository,
+        final RoleRepository roleRepository,
+        final AuthorityRepository authorityRepository,
+        final PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.tagRepository = tagRepository;
         this.categoryRepository = categoryRepository;
+        this.roleRepository = roleRepository;
+        this.authorityRepository = authorityRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -46,54 +67,77 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void initData() {
+        Authority readCategory = authorityRepository.save(Authority.builder().permission("category.read").build());
+        Authority updateCategory = authorityRepository.save(Authority.builder().permission("category.update").build());
+        Authority createCategory = authorityRepository.save(Authority.builder().permission("category.create").build());
+        Authority deleteCategory = authorityRepository.save(Authority.builder().permission("category.delete").build());
+
+        Role roleUser = roleRepository.save(Role.builder().id(1).name(RoleName.ROLE_USER).build());
+        Role roleAdmin = roleRepository.save(Role.builder().id(2).name(RoleName.ROLE_ADMIN).build());
+
+        roleAdmin.setAuthorities(
+            Stream.of(createCategory, updateCategory, readCategory, deleteCategory).collect(Collectors.toSet())
+        );
+        roleUser.setAuthorities(Stream.of(readCategory).collect(Collectors.toSet()));
+
+        roleRepository.saveAll(Arrays.asList(roleAdmin, roleUser));
+
         createUser("john_doe","John", "Doe",  "johndoe@example.com",
-                passwordEncoder.encode("password"), Gender.M, true);
+                passwordEncoder.encode("password"), Gender.M, true, roleAdmin);
 
         createUser("jane_doe", "Jane", "Doe", "janedoe@example.com",
-                "1234", Gender.F, true);
+                passwordEncoder.encode("password"), Gender.F, true, roleAdmin);
 
         createUser("james_hetfield", "James", "Hetfield", "hetfield@example.com",
-                passwordEncoder.encode("password"), Gender.M, false);
+                passwordEncoder.encode("password"), Gender.M, false, roleUser);
 
         createUser("jack_london", "Jack", "London", "jackL@example.com",
-                passwordEncoder.encode("password"), Gender.M, false);
+                passwordEncoder.encode("password"), Gender.M, false, roleUser);
 
         createUser("radioactive", "Marie", "Curie", "mcurie@example.com",
-                passwordEncoder.encode("password"), Gender.F, true);
+                passwordEncoder.encode("password"), Gender.F, true, roleUser);
 
         createUser("ww", "Walt", "Whitman", "ww@example.com",
-                passwordEncoder.encode("password"), Gender.M, true);
+                passwordEncoder.encode("password"), Gender.M, true, roleUser);
 
         createUser("vwoolf", "Virginia", "Woolf", "vwoolf@example.com",
-                passwordEncoder.encode("password"), Gender.F, true);
+                passwordEncoder.encode("password"), Gender.F, true, roleUser);
 
         createUser("bruced", "Bruce", "Dickinson", "eddiethegreat@example.com",
-                passwordEncoder.encode("password"), Gender.M, true);
+                passwordEncoder.encode("password"), Gender.M, true, roleUser);
 
         createUser("a_mariner", "Ancient", "Mariner", "amariner@example.com",
-                passwordEncoder.encode("password"), Gender.M, true);
+                passwordEncoder.encode("password"), Gender.M, true, roleUser);
 
         createUser("thequeenofcrime", "Agatha", "Cristie", "achristie@example.com",
-                passwordEncoder.encode("password"), Gender.F, true);
+                passwordEncoder.encode("password"), Gender.F, true, roleUser);
 
         createUser("particle", "Stephen", "Hawking", "hawking@example.com",
-                passwordEncoder.encode("password"), Gender.M, true);
+                passwordEncoder.encode("password"), Gender.M, true, roleUser);
 
         createUser("hopper", "Grace", "Hopper", "ghopper@example.com",
-                passwordEncoder.encode("password"), Gender.F, true);
+                passwordEncoder.encode("password"), Gender.F, true, roleUser);
 
         createUser("torvalds", "Linus", "Torvalds", "linux@example.com",
-                passwordEncoder.encode("password"), Gender.M, true);
+                passwordEncoder.encode("password"), Gender.M, true, roleUser);
 
         createUser("annie", "Annie", "Easley", "easley@example.com",
-                passwordEncoder.encode("password"), Gender.F, true);
+                passwordEncoder.encode("password"), Gender.F, true, roleUser);
 
         createPost(userRepository.findByEmail("hetfield@example.com").get());
         createPost(userRepository.findByEmail("eddiethegreat@example.com").get());
     }
 
-    public void createUser(final String username, final String firstName, final String lastName, final String email, final String password,
-                           final Gender gender, final boolean active) {
+    public void createUser(
+        final String username,
+        final String firstName,
+        final String lastName,
+        final String email,
+        final String password,
+        final Gender gender,
+        final boolean active,
+        final Role userRole
+    ) {
         User user = new User();
         user.setId(UUID.randomUUID());
         user.setUsername(username);
@@ -104,11 +148,8 @@ public class DataLoader implements CommandLineRunner {
         user.setGender(gender);
         user.setActive(active);
         user.setConfirmationToken(UUID.randomUUID().toString());
-        Role r = new Role();
-        r.setId(1L);
-        r.setName(RoleName.ROLE_USER);
         Set<Role> roles = new HashSet<>();
-        roles.add(r);
+        roles.add(userRole);
         user.setRoles(roles);
         userRepository.save(user);
     }
