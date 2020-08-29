@@ -1,11 +1,11 @@
 package com.springapi.bootstrap;
 
-import com.springapi.domain.Authority;
+import com.springapi.security.domain.Authority;
 import com.springapi.domain.Category;
 import com.springapi.domain.Gender;
 import com.springapi.domain.Post;
-import com.springapi.domain.Role;
-import com.springapi.domain.RoleName;
+import com.springapi.security.domain.Role;
+import com.springapi.security.domain.RoleName;
 import com.springapi.domain.Tag;
 import com.springapi.domain.User;
 import com.springapi.repository.AuthorityRepository;
@@ -14,6 +14,7 @@ import com.springapi.repository.PostRepository;
 import com.springapi.repository.RoleRepository;
 import com.springapi.repository.TagRepository;
 import com.springapi.repository.UserRepository;
+import com.springapi.security.permissions.CategoryPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,10 +68,14 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void initData() {
-        Authority readCategory = authorityRepository.save(Authority.builder().permission("category.read").build());
-        Authority updateCategory = authorityRepository.save(Authority.builder().permission("category.update").build());
-        Authority createCategory = authorityRepository.save(Authority.builder().permission("category.create").build());
-        Authority deleteCategory = authorityRepository.save(Authority.builder().permission("category.delete").build());
+        Authority readCategory = authorityRepository.save(Authority.builder()
+            .permission(CategoryPermissions.READ.getValue()).build());
+        Authority updateCategory = authorityRepository.save(Authority.builder()
+            .permission(CategoryPermissions.UPDATE.getValue()).build());
+        Authority createCategory = authorityRepository.save(Authority.builder()
+            .permission(CategoryPermissions.CREATE.getValue()).build());
+        Authority deleteCategory = authorityRepository.save(Authority.builder()
+            .permission(CategoryPermissions.DELETE.getValue()).build());
 
         Role roleUser = roleRepository.save(Role.builder().id(1).name(RoleName.ROLE_USER).build());
         Role roleAdmin = roleRepository.save(Role.builder().id(2).name(RoleName.ROLE_ADMIN).build());

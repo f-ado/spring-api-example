@@ -1,5 +1,7 @@
 package com.springapi.domain;
 
+import com.springapi.security.domain.Authority;
+import com.springapi.security.domain.Role;
 import lombok.Getter;
 import lombok.Setter;
 

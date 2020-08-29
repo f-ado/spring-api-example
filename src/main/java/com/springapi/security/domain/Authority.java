@@ -1,4 +1,4 @@
-package com.springapi.domain;
+package com.springapi.security.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

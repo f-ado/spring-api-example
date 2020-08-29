@@ -1,7 +1,7 @@
 package com.springapi.authentication;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.springapi.domain.Authority;
+import com.springapi.security.domain.Authority;
 import com.springapi.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

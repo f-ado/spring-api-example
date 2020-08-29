@@ -1,8 +1,8 @@
 package com.springapi.service;
 
 import com.springapi.domain.Category;
-import com.springapi.domain.Post;
 import com.springapi.repository.CategoryRepository;
+import com.springapi.service.request.CategoryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,5 +29,11 @@ public class CategoryService {
         List<Category> categories = categoryPage.getContent();
 
         return new PageImpl(categories, page, categoryPage.getTotalElements());
+    }
+
+    public Category createCategory(CategoryRequest request) {
+        Category category = new Category();
+        category.setName(request.getName());
+        return repository.save(category);
     }
 }
