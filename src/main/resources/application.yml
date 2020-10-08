@@ -36,5 +36,7 @@ destination:
   user:
     registration: user.created.email
 
+unlockUsersPeriod: 60
+
 server:
   port: 8000
