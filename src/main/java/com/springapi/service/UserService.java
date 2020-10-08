@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -83,6 +84,14 @@ public class UserService {
         } else {
             return null;
         }
+    }
+
+    public User findByUsername(final String username) {
+        Optional<User> found = userRepository.findByUsername(username);
+        if (found.isPresent()) {
+            return found.get();
+        }
+        return null;
     }
 
     public User findOne(final UUID id) {

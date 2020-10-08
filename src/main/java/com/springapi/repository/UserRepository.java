@@ -16,6 +16,8 @@ public interface UserRepository extends
         JpaSpecificationExecutor<User> {
     Optional<User> findByEmail(final String email);
 
+    Optional<User> findByUsername(final String username);
+
     Optional<User> findByConfirmationToken(final String confirmationToken);
 
     Optional<User> findByUsernameOrEmail(final String username, final String email);

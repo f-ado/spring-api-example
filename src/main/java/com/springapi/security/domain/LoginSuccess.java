@@ -1,5 +1,6 @@
-package com.springapi.domain;
+package com.springapi.security.domain;
 
+import com.springapi.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Login {
+public class LoginSuccess {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
