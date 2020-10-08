@@ -65,6 +65,9 @@ public class User extends DateAudit {
     @Column(name = "confirmation_token")
     private String confirmationToken;
 
+    @Column(name = "is_account_non_locked")
+    private boolean isAccountNonLocked;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},

@@ -19,6 +19,7 @@ public class UserPrincipal implements UserDetails {
     private String email;
     @JsonIgnore
     private String password;
+    private boolean isAccountNonLocked;
     private Collection<? extends GrantedAuthority> authorities;
 
 
@@ -28,6 +29,7 @@ public class UserPrincipal implements UserDetails {
                          final String username,
                          final String email,
                          final String password,
+                         final boolean isAccountNonLocked,
                          Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.firstName = firstName;
@@ -36,6 +38,7 @@ public class UserPrincipal implements UserDetails {
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.isAccountNonLocked = isAccountNonLocked;
     }
 
     public static UserPrincipal create(final User user) {
@@ -53,6 +56,7 @@ public class UserPrincipal implements UserDetails {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
+                user.isAccountNonLocked(),
                 authorities
         );
     }
@@ -79,7 +83,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isAccountNonLocked;
     }
 
     @Override

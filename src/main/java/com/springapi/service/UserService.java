@@ -86,14 +86,6 @@ public class UserService {
         }
     }
 
-    public User findByUsername(final String username) {
-        Optional<User> found = userRepository.findByUsername(username);
-        if (found.isPresent()) {
-            return found.get();
-        }
-        return null;
-    }
-
     public User findOne(final UUID id) {
         return userRepository.getOne(id);
     }

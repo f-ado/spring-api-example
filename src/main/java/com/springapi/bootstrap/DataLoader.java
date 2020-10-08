@@ -156,6 +156,7 @@ public class DataLoader implements CommandLineRunner {
         Set<Role> roles = new HashSet<>();
         roles.add(userRole);
         user.setRoles(roles);
+        user.setAccountNonLocked(true);
         userRepository.save(user);
     }
 
