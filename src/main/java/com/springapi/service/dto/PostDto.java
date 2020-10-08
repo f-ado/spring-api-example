@@ -38,7 +38,7 @@ public class PostDto {
         this.categories = post.getCategories();
         this.tags = post.getTags();
         this.user = new UserDto(post.getUser());
-        this.createdAt = post.getCreatedAt().toString();
-        this.updatedAt = post.getUpdatedAt().toString();
+        this.createdAt = post.getCreatedDate().toString();
+        this.updatedAt = post.getLastModifiedDate().toString();
     }
 }

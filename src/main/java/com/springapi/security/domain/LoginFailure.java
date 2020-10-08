@@ -1,21 +1,20 @@
 package com.springapi.security.domain;
 
+import com.springapi.domain.DateAudit;
 import com.springapi.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-public class LoginFailure {
+public class LoginFailure extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,8 +24,4 @@ public class LoginFailure {
 
     @ManyToOne
     private User user;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private Timestamp createdDate;
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,4 +26,5 @@ public interface UserRepository extends
     Boolean existsByEmail(final String email);
 
     Boolean existsByUsername(final String username);
+
 }

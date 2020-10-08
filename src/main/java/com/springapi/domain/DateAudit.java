@@ -1,18 +1,16 @@
 package com.springapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -20,19 +18,12 @@ import java.time.Instant;
         value = {"created_at", "updated_at"},
         allowGetters = true
 )
+@Getter
 public abstract class DateAudit implements Serializable {
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Timestamp createdDate;
 
-    @Getter
-    @Setter
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    @JsonProperty("created_at")
-    private Instant createdAt;
-
-    @Getter
-    @Setter
-    @LastModifiedDate
-    @Column(nullable = false)
-    @JsonProperty("updated_at")
-    private Instant updatedAt;
+    @UpdateTimestamp
+    private Timestamp lastModifiedDate;
 }
